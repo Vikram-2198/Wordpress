@@ -1,0 +1,40 @@
+<?php /* Template Name: Blog Template */ 
+
+
+get_header();
+
+echo "Blog Page";
+
+?>
+
+<section class="blog_wrap">
+	<div class="row">
+		<?php 
+		$args = array( 'post_type' => 'event', 'posts_per_page' => 4 );
+		$the_query = new WP_Query( $args ); 
+		 if ( $the_query->have_posts() ) : 
+		  while ( $the_query->have_posts() ) : $the_query->the_post(); ?>
+			<div class="blog_thumb">
+			<h2><?php the_title(); ?></h2>
+			</div>
+		<?php endwhile;
+
+		$big = 999999999; // need an unlikely integer
+		 echo paginate_links( array(
+		    'base' => str_replace( $big, '%#%', get_pagenum_link( $big ) ),
+		    'format' => '?paged=%#%',
+		    'current' => max( 1, get_query_var('paged') ),
+		    'total' => $the_query->max_num_pages
+		) );
+		wp_reset_postdata(); ?>
+		<?php else:  ?>
+		<p><?php _e( 'Sorry, no posts matched your criteria.' ); ?></p>
+		<?php endif; ?>
+	</div>
+
+</section>
+
+<?php 
+get_footer();
+
+?>
